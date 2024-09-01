@@ -6,20 +6,31 @@
 namespace tcmalloc {
 namespace tcmalloc_internal {
 
+// get next reference of current
+inline void*& NextObj(void* obj)
+{
+  // C point may be 4 bytes or 8 bytes in different platform
+  return *((void**)obj);
+}
+
 class FreeList {
 public:
-    void Push(void* mem);
+	// head insertion
+	void Push(void* mem);
 
-    void Pop();
+	// head insertion
+	void PushRange(void* start, void* end, size_t size);
 
-public:
-    // get the next object of cur point
-    static void* NextObj(void* current);
+	// get and pop head point
+	void* Pop();
+
+	size_t Size();
 
 private:
-    void* head_ = nullptr;
+	void* head_ = nullptr;
 
-    size_t size_ = 0;
+	// count of free list node
+	size_t size_ = 0;
 };
     
 

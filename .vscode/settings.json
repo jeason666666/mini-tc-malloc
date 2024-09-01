@@ -1,5 +1,7 @@
 {
     "files.associations": {
         "cstddef": "cpp"
-    }
+    },
+    "editor.tabSize": 2,
+    "editor.insertSpaces": true,
 }

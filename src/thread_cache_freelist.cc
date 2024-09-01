@@ -5,23 +5,34 @@ namespace tcmalloc_internal {
 
 void FreeList::Push(void* mem)
 {
-    // insert after head point
-    void* nxt = NextObj(head_);
+  // head insertion
+  *(void**)(mem) = NextObj(head_);
+  *(void**)(head_) = mem;
+
+  size_++;
 }
 
-void FreeList::Pop()
+void FreeList::PushRange(void* start, void* end, size_t size)
 {
+  NextObj(end) = head_;
+  head_ = start;
 
+  size_ += size;
 }
 
-void* FreeList::NextObj(void* current)
+void* FreeList::Pop()
 {
-    // because of the platform version,
-    // C point may be 4 bytes or 8 bytes
-    // so we first convert 'current' to a 'void**'
-    // then we defrefrence 'void**' to 'void*' thich
-    // must have a correct size in this platform
-    return *((void**)current);
+  // head deletion
+  void* ret = head_;
+  head_ = NextObj(head_);
+
+  size_--;
+  return ret;
+}
+
+size_t FreeList::Size()
+{
+  return size_;
 }
 
 } // tcmalloc_internal
